@@ -1,0 +1,42 @@
+A.)
+-   Zum einen vereinfachen Coroutinen die Strukturierung von asynchronen Operationen im Vergleich
+    zu traditionellen Ansätzen wie Callbacks oder AsyncTask. Das heißt, der Code bleibt lesbar und linear,
+    was die Fehleranfälligkeit reduziert.
+-   Durch den Einsatz von Coroutinen entfällt die Notwendigkeit für aufwendige Implementierungen
+    von Callbacks. Dies führt zu sauberem und wartbarem Code.
+-   Coroutinen ermöglichen die Verwendung von suspend-Funktionen, die eine Operation pausieren und
+    später wieder aufnehmen können, ohne den Thread zu blockieren. Dadurch werden UI-Threads freigehalten
+-   Coroutinen unterstützen verschiedene Dispatcher (Dispatchers.Main, Dispatchers.IO, Dispatchers.Default),
+    wodurch sich steuern lässt, auf welchem Thread die Coroutine ausgeführt wird.
+    Dies erleichtert das Wechseln zwischen UI- und Hintergrundoperationen.
+
+B.)
+    Ich habe mich für den Dispatcher.IO entschieden, weil dieser besonders für Netzwerk oder
+    Datenbankoperationen effektiv ist und wir wollen ja die Vorhersagedaten von einer Datenbank abrufen.
+
+C.)
+-   Musik-Player im Hintergrund:
+    Ein Service ist ideal, um Musik oder Podcasts abzuspielen,
+    auch wenn die App nicht im Vordergrund ist.
+    Der Service sorgt dafür, dass die Audio-Wiedergabe nicht unterbrochen wird,
+    selbst wenn der Nutzer zu einer
+    anderen App wechselt oder den Bildschirm sperrt.
+
+-   Standort-Tracking für Navigations-Apps:
+    Ein Service eignet sich für kontinuierliche Standortabfragen im Hintergrund,
+    etwa bei Navigationsanwendungen oder Fitness-Trackern. Der Service stellt sicher,
+    dass die Standortverfolgung selbst dann weiterläuft,
+    wenn der Nutzer zwischen Apps wechselt oder die App minimiert wird.
+
+D.)
+    Eine Stelle wäre in der PopupService Klasse in der initializeTimerFromSettings Methode.
+    Hier wird eine Coroutine gestartet, wodurch die Arbeit in einem Hintergrund-Thread
+    ausgeführt wird, um den Haupt-UI-Thread nicht zu blockieren. Innerhalb dieser Coroutine wird
+    die suspendierende Funktion fetchTimerOptionFromSettings() aufgerufen, um asynchron den gespeicherten Timer-Wert
+    aus dem DataStore zu lesen – ein Vorgang, der aufgrund von I/O-Zugriffen Zeit in Anspruch nehmen kann.
+    Sobald der Timer-Wert abgerufen wurde, wird die Verzögerungszeit delayMillis berechnet und
+    die Runnable showNotificationRunnable gestartet, um wiederholt Benachrichtigungen auszulösen.
+
+    Vorteil:
+    Die coroutine ermöglicht es asynchrone Aufgaben wie hier das Abfragen des Timer-Werts, durchzuführen,
+    ohne den Haupt-Thread zu blockieren.
